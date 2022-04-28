@@ -35,7 +35,7 @@ setup(
         "Bug Tracker": "https://github.com/shaped-ai/feast-mysql/issues",
     },
     license="Apache License, Version 2.0",
-    packages=["feast-mysql", "feast-mysql.offline_store"],
+    packages=["feast_mysql", "feast_mysql.offline_store"],
     install_requires=INSTALL_REQUIRE,
     extras_require={
         "dev": DEV_REQUIRE,

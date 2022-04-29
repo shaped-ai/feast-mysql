@@ -3,20 +3,19 @@ from typing import Dict
 
 import pandas as pd
 import pyarrow as pa
-from mysql import connector
-from mysql.connector import errorcode
-from mysql.connector.connection import MySQLConnection
-from mysql.connector.cursor import MySQLCursor
+
+from pymysql import connect, Connection, err
+from pymysql.cursors import Cursor
 
 from .mysql_config import MySQLConfig
 from .type_map import arrow_type_string_to_mysql_type
 
 
 @contextmanager
-def _get_conn(config: MySQLConfig) -> MySQLConnection:
+def _get_conn(config: MySQLConfig) -> Connection:
     try:
         conn = (
-            connector.connect(
+            connect(
                 database=config.database,
                 host=config.host,
                 port=int(config.port),
@@ -25,7 +24,7 @@ def _get_conn(config: MySQLConfig) -> MySQLConnection:
                 # options="-c search_path={}".format(config.db_schema or config.user),
             )
             if config.database
-            else connector.connect(
+            else connect(
                 host=config.host,
                 port=int(config.port),
                 user=config.user,
@@ -35,17 +34,17 @@ def _get_conn(config: MySQLConfig) -> MySQLConnection:
         )
 
         yield conn
-    except connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    except err.MySQLError as error:
+        if error.errno == err.ER.ACCESS_DENIED_ERROR:
             print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        elif error.errno == err.ER.BAD_DB_ERROR:
             print("Database does not exist")
     finally:
         conn.close()
 
 
 @contextmanager
-def get_cur(connection: MySQLConnection) -> MySQLCursor:
+def get_cur(connection: Connection) -> Cursor:
     try:
         cur = connection.cursor()
 

@@ -1,4 +1,4 @@
-import mysql
+from pymysql import DatabaseError
 
 from feast.protos.feast.core.Registry_pb2 import Registry as RegistryProto
 from feast.registry_store import RegistryStore
@@ -40,7 +40,7 @@ class MySQLRegistryStore(RegistryStore):
                 row = cur.fetchone()
                 if row:
                     registry_proto = registry_proto.FromString(row[0])
-            except mysql.errors.DatabaseError:
+            except DatabaseError:
                 pass
         return registry_proto
 

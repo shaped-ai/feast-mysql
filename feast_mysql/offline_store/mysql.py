@@ -263,7 +263,6 @@ class MySQLRetrievalJob(RetrievalJob):
     def _to_arrow_internal(self) -> pa.Table:
         with self._query_generator() as query:
             with _get_conn(self.config.offline_store) as conn, get_cur(conn) as cur:
-                conn.set_session(readonly=True)
                 cur.execute(query)
                 fields = [
                     (col[1], mysql_type_to_arrow_type_string(col[1]))  # name, type

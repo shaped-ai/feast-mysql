@@ -149,6 +149,7 @@ class MySQLOfflineStore(OfflineStore):
                 feature_views,
                 registry,
                 project,
+                entity_df_event_timestamp_range,
             )
 
             query_context = [asdict(context) for context in query_context]
@@ -288,7 +289,7 @@ class MySQLRetrievalJob(RetrievalJob):
 
     def persist(self, storage: SavedDatasetStorage):
         raise NotImplementedError(
-            "feast-postgres does not support persisting historical dataframes"
+            "feast-mysql does not support persisting historical dataframes"
         )
 
 

@@ -365,10 +365,9 @@ def build_point_in_time_query(
     return query
 
 
-# Copied from the Feast Redshift offline store implementation
-# Note: Keep this in sync with sdk/python/feast/infra/offline_stores/redshift.py:
+# Copied from the Feast Postgres offline store implementation
 # MULTIPLE_FEATURE_VIEW_POINT_IN_TIME_JOIN
-# https://github.com/feast-dev/feast/blob/master/sdk/python/feast/infra/offline_stores/redshift.py
+# https://github.com/feast-dev/feast/blob/104155cfcd681fe3ce88ece71f1d47eb5d7cfd36/sdk/python/feast/infra/offline_stores/contrib/postgres_offline_store/postgres.py
 
 MULTIPLE_FEATURE_VIEW_POINT_IN_TIME_JOIN = """
 /*
@@ -382,12 +381,12 @@ WITH entity_dataframe AS (
             {% if featureview.entities %}
             ,(
                 {% for entity in featureview.entities %}
-                    CAST("{{entity}}" as VARCHAR) ||
+                    CAST({{entity}} as CHAR) ||
                 {% endfor %}
-                CAST("{{entity_df_event_timestamp_col}}" AS VARCHAR)
+                CAST({{entity_df_event_timestamp_col}} AS CHAR)
             ) AS "{{featureview.name}}__entity_row_unique_id"
             {% else %}
-            ,CAST("{{entity_df_event_timestamp_col}}" AS VARCHAR) AS "{{featureview.name}}__entity_row_unique_id"
+            ,CAST({{entity_df_event_timestamp_col}} AS CHAR) AS "{{featureview.name}}__entity_row_unique_id"
             {% endif %}
         {% endfor %}
     FROM {{ left_table_query_string }}

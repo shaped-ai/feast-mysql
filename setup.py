@@ -23,7 +23,7 @@ DEV_REQUIRE = [
 
 setup(
     name="feast-mysql",
-    version="0.3.2",
+    version="0.3.3",
     author="Shaped",
     author_email="shai@shaped.ai",
     description="MySQL registry and offline store for Feast",
